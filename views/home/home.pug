@@ -1,8 +1,41 @@
-html    
-    head 
-        title Home
-        include ./include_lib.pug
-    body 
-        h2 Chess game
+extends ../layout
+
+block includelib
+    // include chessboard.js 
+    include ./chessboardjs.pug
+    //include chess.js
+    include ./chessjs.pug
+    //- //include board.js
+    //- include ./board.pug
+    //include the engineGame
+    include ./engine.pug
+    //inclue main game
+    include ./mainjs.pug
+
+block includestyle
+    include ./style.pug
+
+block content
+    div(class="fluid-container")
+        div(class="row")
+            div(id="board" style="width:450px;padding-top:50px; margin:auto;")
         
-        div(id="board" style="width: 400px")
+block info
+    div(class="fluid-container")
+        div(class="row window info")
+            // Info data
+            p Info
+        div(class="row window moves-history")
+            // 
+            p Move History Of The Entire Game.
+        div(class="row window thinking-icon")
+            p Thinking Icon
+
+        div(class="jumbotron jumbotron-fluid " style="text-align:center; margin-top:20px;padding-top:10px;padding-bottom:10px")
+            div(class="container")
+                p(class='engineStatus') Engine Status
+        //test the log, the scroller is not implemented
+        div(class="row")
+            div
+            p(class="logger") Logger :
+        

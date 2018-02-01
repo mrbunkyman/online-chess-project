@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    h2 Login 
+    form(action="/login" method="post")
+        input(type="text" name="username" required placeholder="Enter you username")
+        br
+        input(type="password" name="password" required placeholder="Enter your password")
+        br
+        button(class='btn-primary' type="submit") Login
+    br
+    form(action="/login/signup" method="get")
+        button(class='btn-primary' type="submit") Sign Up 
+    
+    p Registered users : #{data.userCount}
+        

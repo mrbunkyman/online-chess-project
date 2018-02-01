@@ -1,0 +1,20 @@
+
+.window{
+    /* width:200%; */
+    margin-top:10px;
+    border-left:7px solid #247BA0;
+    background-color:#E2E2E2;
+    padding:5px;
+}
+
+.info{
+    height:50px;
+}
+
+.moves-history{
+    height:400px;
+}
+
+.thinking-icon{
+    height:50px;
+}

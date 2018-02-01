@@ -3,15 +3,22 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@angular/common": "^5.2.2",
+    "async": "^2.6.0",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.15.5",
+    "express-session": "^1.15.6",
+    "moment": "^2.20.1",
+    "mongoose": "^5.0.1",
     "morgan": "~1.9.0",
     "pug": "2.0.0-beta11",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "stockfish": "^8.0.0"
   }
 }
