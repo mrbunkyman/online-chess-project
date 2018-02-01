@@ -1,1 +1,1 @@
-online chess projects
+Chess Project Tutorial
