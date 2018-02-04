@@ -3,12 +3,29 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
-}
-
 .sidebar-nav{
-  margin-top:20px;
   padding:0;
   list-style:none;
 }
+
+.nav-button{
+  padding-top:10px;
+  padding-bottom:10px;
+  color:#00B7FF;
+  text-align: center;
+}
+
+.nav-button:hover{
+  border-right:3px solid #00B7FF;
+  transition-duration: 250ms;
+  cursor: pointer;
+}
+
+.chat-box{
+  padding:5px 5px;
+  size:50;
+  margin-right:10px;
+  margin-left:10px;
+}
+
+

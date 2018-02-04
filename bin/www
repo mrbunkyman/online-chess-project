@@ -20,6 +20,41 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var io = require("socket.io").listen(server);
+
+function generateRoomId() {
+  var result = "";
+  var length = 16; 
+  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-@";
+
+  for (var i = 0; i < length; i++)
+    result += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return result;
+}
+
+//socket io listen to connection
+io.on('connection',function(socket){
+
+  io.emit("greetings","welcome to chess online");
+  //assign room ID to client
+  var room = generateRoomId();
+  socket.join(room); //initialy give the player a random room id
+  socket.emit('roomId',room);
+
+  //recieve send message request from client with room and message
+  socket.on('sendMessage',function(room,message){
+    io.to(room).emit("sendMessage",message);
+  })
+
+  //recieve request to join room with code
+  socket.on('joinRoom',function(room){
+    socket.join(room);
+  })
+
+
+})
+//socket io ends
 
 /**
  * Listen on provided port, on all network interfaces.

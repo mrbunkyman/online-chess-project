@@ -11,6 +11,8 @@ block includelib
     include ./engine.pug
     //inclue main game
     include ./mainjs.pug
+    //include socket.io
+    include ./socket.pug
 
 block includestyle
     include ./style.pug
@@ -18,18 +20,30 @@ block includestyle
 block content
     div(class="fluid-container")
         div(class="row")
+            p(id="showRoomId")
+        div(class='row')
+            form(id="roomIdForm" method="" )
+                input(id="roomIdInput" class="chat-box" type="text")
+                span
+                    button(class="btn btn-primary" type='submit') Enter Room
+
+        div(class="row")
             div(id="board" style="width:450px;padding-top:50px; margin:auto;")
         
 block info
     div(class="fluid-container")
         div(class="row window info")
             // Info data
-            p Info
+            p(id="headline") You're competing the Computer 
+            
         div(class="row window moves-history")
-            // 
-            p Move History Of The Entire Game.
+            ul(id='messages' class='messages-window')
+                
         div(class="row window thinking-icon")
-            p Thinking Icon
+            form(id="chatBox" method="" )
+                input(id="chat" class="chat-box" type="text")
+                span
+                    button(class="btn btn-primary" type='submit') Send
 
         div(class="jumbotron jumbotron-fluid " style="text-align:center; margin-top:20px;padding-top:10px;padding-bottom:10px")
             div(class="container")
@@ -37,5 +51,5 @@ block info
         //test the log, the scroller is not implemented
         div(class="row")
             div
-            p(class="logger") Logger :
+                p(class="logger") Logger :
         

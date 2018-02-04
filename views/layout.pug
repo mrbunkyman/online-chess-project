@@ -2,9 +2,8 @@ doctype html
 html
   head
     title= title
-    // general library
+
     meta(charset='utf-8', name='viewport', content='width=device-width, initial-scale=1')
-    link(rel='stylesheet', type="text/css", href='/css/style.css')
     //bootstrap css
     link(rel='stylesheet', type="text/css", href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
     //bootstrap js
@@ -12,20 +11,25 @@ html
     //jquery
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
     
+    // general library    
+    link(rel='stylesheet', type="text/css", href='/css/style.css')
+    // general JS
+    script(src="/js/layout.js")
+
     block includelib
     block includestyle
     
   body
-    div(class='container-fluid')
+    div(class='fluid-container')
       div(class='row')
         div(class='col-sm-2')
           ul(class='sidebar-nav')
-            li 
-              a(href='/login') Login
-            li
-              hr
-            li 
-              a(href='/home') Home
+            li(id="login" class="nav-button")
+              //a(href='/login') Login
+              p Login
+            li(id="vscpu" class="nav-button")
+              //a(href='/home') Home
+              p Play
         div(class='col-sm-6' style="text-align:center;")
           block content
         div(class='col-sm-4')

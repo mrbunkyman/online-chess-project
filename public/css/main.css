@@ -1,11 +1,12 @@
 
 .window{
     /* width:200%; */
-    margin-top:10px;
+    margin-top:5px;
     border-left:7px solid #247BA0;
     background-color:#E2E2E2;
     padding:5px;
 }
+
 
 .info{
     height:50px;
@@ -17,4 +18,8 @@
 
 .thinking-icon{
     height:50px;
+}
+
+.messages-window{
+    list-style:none;
 }

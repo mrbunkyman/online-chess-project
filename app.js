@@ -9,7 +9,7 @@ var session = require("express-session");
 var mongoose = require("mongoose");
 
 var index = require('./routes/index');
-var home = require("./routes/home");
+var main = require("./routes/main");
 var login = require("./routes/login");
 var app = express();
 
@@ -40,9 +40,9 @@ app.use(session({
   }));
 
 app.get('/', (req,res)=>{
-  res.redirect("/home");
+  res.redirect("/login");
 });
-app.use('/home',home);
+app.use('/vscpu',main);
 app.use('/login',login);
 
 // catch 404 and forward to error handler
