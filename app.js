@@ -42,7 +42,7 @@ app.use(session({
 app.get('/', (req,res)=>{
   res.redirect("/login");
 });
-app.use('/vscpu',main);
+app.use('/main',main);
 app.use('/login',login);
 
 // catch 404 and forward to error handler
