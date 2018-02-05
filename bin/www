@@ -43,15 +43,25 @@ io.on('connection',function(socket){
   socket.emit('roomId',room);
 
   //recieve send message request from client with room and message
-  socket.on('sendMessage',function(room,message){
-    io.to(room).emit("sendMessage",message);
-  })
+  socket.on('sendMessage',broadcastMessageToRoom);
 
   //recieve request to join room with code
-  socket.on('joinRoom',function(room){
-    socket.join(room);
-  })
+  socket.on('joinRoom',joinRoomRequest);
 
+  socket.on('move', broadcastMove);
+
+
+
+  function broadcastMessageToRoom(room, message){
+    socket.broadcast.to(room).emit("sendMessage",message);
+  }
+  function joinRoomRequest(room){
+    socket.join(room);
+    socket.broadcast.to(room).emit("sendMessage","SERVER : a user just joined");
+  }
+  function broadcastMove(room, moveData){
+    socket.broadcast.to(room).emit("move",moveData);
+  }
 
 })
 //socket io ends

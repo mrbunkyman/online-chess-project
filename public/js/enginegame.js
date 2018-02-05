@@ -1,9 +1,7 @@
-
-
-function engineGame(options){
+function EngineGame(options){
     var board;
     var stockFish = new Worker('./lib/stockfish/stockfish.js');
-    var chess = Chess();
+
     var engine = stockFish;
      // show the engine status to the front end
     var isEngineReady = false; // default
@@ -35,11 +33,12 @@ function engineGame(options){
     //get all the moves were made 
     function getMoves(){
         var moves = "";
-        var history = chess.history({verbose:true});
+        var history = board.getMoveHistory();
         for(var i =0;i<history.length;i++){
             var move = history[i];
             moves+= " " + move.from + move.to + (move.promotion?move.promotion:"");
         }
+        console.log("******************");
         console.log("MOVES : " + moves);
         return moves;
     }
@@ -48,14 +47,14 @@ function engineGame(options){
     //it has completed search within specific depth
 
     function prepareMove(){
-        $('.logger').text(chess.pgn()+'\n');
+        $('.logger').text(board.getPgn()+'\n');
        
         console.log("CPU is thinking ... ");
         //update the latest board positions before search for moves
-        board.position(chess.fen());
-        var turn = chess.turn()=='w'?'white':'black';
+        board.setFenPosition();
+        var turn = board.getTurn()=='w'?'white':'black';
 
-        if(!chess.game_over() && turn!=playerColor){
+        if(!board.isGameOver() && turn!=playerColor){
             //tell the engines all the moves that were made
             uciCmd('position startpos moves ' + getMoves());
             //start searching, if depth exists, use depth paramter, else let the engine use default
@@ -70,78 +69,37 @@ function engineGame(options){
             isEngineReady=true;
             reportEngineStatus();
         } else {
-            var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?/);
+            var match = line.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?.\bbestmoveSan ...([+]|[#])?/);
             console.log("match " + match);
             if(match){
-                chess.move({from:match[1],to:match[2],promotion:match[3]});
+                if(match[4]=="+"){ // player is being checked
+                    //window.alert("You're being Checked");
+
+                } else if(match[4]=="#"){ // player lose,  game over
+                    //window.alert("Game Over! You lose ");
+                }
+                board.makeMove(match[1],match[2],match[3]);
+
                 //window.setTimeOut(updateStatus,200);
                 prepareMove();
             }
         }
     }
-
-    //set up the board
-    var onDragStart = function(source, piece, position, orientation) {
-        if (chess.game_over() === true ||
-            (chess.turn() === 'w' && piece.search(/^b/) !== -1) ||
-            (chess.turn() === 'b' && piece.search(/^w/) !== -1)) {
-                
-                return false;
-        } 
-      };
-
-      var onDrop = function(source, target) {
-        // see if the move is legal
-        var move = chess.move({
-            from: source,
-            to: target,
-            //promotion: document.getElementById("promote").value
-        });
-
-        // illegal move
-        if (move === null) return 'snapback';
-        updateStatus();
-        //player just end turn, CPU starts searching after a second
-        window.setTimeout(prepareMove,500);
-        
-    };
-
-    var updateStatus= function(){
-        var status = "";
-        var moveColor = "White";
-        if(chess.turn()=='b'){   
-            moveColor = "Black";
-        }
-        if(chess.in_checkmate()==true){
-            status=  "Game Over, " + moveColor + " is in check mate";
-            window.alert(status);
-            return; 
-        } else if(chess.in_draw()){
-            status = "Game Over, Drawn";
-            window.alert(status);
-            return;
-        }
-
-    }
-    
-    var cfg = {
-        showErrors: true,
-        draggable: true,
-        position: 'start',
-        onDragStart: onDragStart,
-        onDrop: onDrop,
-    };
-
-    board = new ChessBoard('board', cfg);
     
     return {
+        setBoard:function(newBoard){
+            board = newBoard;
+        },
         reset:function(){
             // reset the board position
-            chess.reset();
+            board.reset();
+        },
+        setSocket:function(newSocket){
+            socket= newSocket;
         },
         setPlayerColor:function(color){ // set the player color, black or white
             playerColor = color;
-            board.orientation(playerColor);
+            board.setOrientation(playerColor);
         },
         setDepth:function(depth){
             time = {depth:depth}
@@ -150,11 +108,12 @@ function engineGame(options){
             uciCmd('ucinewgame');
             uciCmd('isready');
             reportEngineStatus();
-            board.start;
+            board.startBoard();
+            prepareMove();
+        },
+        prepareAiMove:function(){
             prepareMove();
         }
-
-
     }
 
 
