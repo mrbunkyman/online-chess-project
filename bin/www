@@ -50,7 +50,7 @@ io.on('connection',function(socket){
 
   socket.on('move', broadcastMove);
 
-
+  socket.on('newGame',newGame);
 
   function broadcastMessageToRoom(room, message){
     socket.broadcast.to(room).emit("sendMessage",message);
@@ -61,6 +61,9 @@ io.on('connection',function(socket){
   }
   function broadcastMove(room, moveData){
     socket.broadcast.to(room).emit("move",moveData);
+  }
+  function newGame(room){
+    socket.broadcast.to(room).emit("newGame");
   }
 
 })

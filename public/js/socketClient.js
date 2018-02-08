@@ -1,15 +1,13 @@
 function SocketClient(){
-    var socket = io.connect('http://localhost:3000');
-    var isCompetingCpu = true; // true by default;
-    var engineGame;
+        var socket = io.connect('http://localhost:3000');    var engineGame;
     var headline = $('#headline');
     var messages = $('#messages');
     var chatBox = $("#chatBox");
     var chat = $('#chat');
-
+//  var isCompetingCpu;
     var roomIdForm = $('#roomIdForm');
     var roomIdInput = $('#roomIdInput');
-
+    var newGameButton = $("#newGameButton");
     var showRoomId = $('#showRoomId');
 
     var game; // attach the game board and engine
@@ -18,17 +16,23 @@ function SocketClient(){
 
     var board; // server sends opponent move to board
 
-    if(isCompetingCpu){
-        headline.text("Competing Computer");
-    } else {
-        headline.text("Competing SomeGuy");
-    }
+    // if(isCompetingCpu){
+    //     headline.text("Competing Computer");
+    // } else {
+    //     headline.text("Competing SomeGuy");
+    // }
 
+    newGameButton.click(function(){
+        console.log("clicked");
+        socket.emit("newGame",room);
+        board.reset();
+    })
     //Enter room with Id
     roomIdForm.submit(function(){
         //send this to the server
         room = roomIdInput.val();
         socket.emit('joinRoom',room);
+        board.setOrientation('black');
         showRoomId.text("Room ID : " + room);
         roomIdInput.val('');
         return false;
@@ -41,6 +45,10 @@ function SocketClient(){
         socket.emit("sendMessage",room,chat.val());
         chat.val('');
         return false;
+    })
+
+    socket.on("newGame",function(){
+        board.reset();
     })
     socket.on('roomId',function(roomId){
         room = roomId;

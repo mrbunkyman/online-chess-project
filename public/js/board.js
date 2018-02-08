@@ -3,10 +3,11 @@ function Board(){
     var socket;
     var chess = Chess();
     var chessEngine;
+    var color;
 
     var isCompetingCpu = false; // true until a player connects;
     var onDragStart = function(source, piece, position, orientation) {
-        if (chess.game_over() === true ||
+        if (chess.game_over() === true || ( chess.turn()!=color)||
             (chess.turn() === 'w' && piece.search(/^b/) !== -1) ||
             (chess.turn() === 'b' && piece.search(/^w/) !== -1)) {
                 return false;
@@ -67,7 +68,9 @@ function Board(){
         }, setChessEngine:function(engine){
             chessEngine = engine;
         },setOrientation:function(playerColor){
-            board.orientation(playerColor);
+            color = playerColor.charAt(0).toLowerCase();
+            if(color=='w' || color=='b')
+                board.orientation(playerColor);
         },setFenPosition:function(){
             board.position(chess.fen());
         },getMoveHistory:function(){
@@ -84,6 +87,7 @@ function Board(){
             chess.move({from:source,to:target,promotion:promo});//chessEngine.prepareAiMove();
         }, reset:function(){
             chess.reset();
+            board.start();
         },startBoard:function(){
             board.start();
         }
