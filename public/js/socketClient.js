@@ -9,6 +9,11 @@ function SocketClient(){
     var roomIdInput = $('#roomIdInput');
     var newGameButton = $("#newGameButton");
     var showRoomId = $('#showRoomId');
+    var nameForm = $('#nameForm');
+    var nameInput = $('#nameInput');
+    var name =$("#name");
+    var joinGame = $('#joinGame');
+    var hostName=$('#hostName');
 
     var game; // attach the game board and engine
 
@@ -28,15 +33,29 @@ function SocketClient(){
         board.reset();
     })
     //Enter room with Id
-    roomIdForm.submit(function(){
-        //send this to the server
-        room = roomIdInput.val();
-        socket.emit('joinRoom',room);
-        board.setOrientation('black');
-        showRoomId.text("Room ID : " + room);
-        roomIdInput.val('');
+    nameForm.submit(function(){
+         socket.emit("sendName",nameInput.val());
+         name.text(nameInput.val());
+         nameInput.val('');
+         nameForm.hide();
+         return false;
+    })
+    joinGame.submit(function(){
+        socket.emit("joinRequestTo",hostName.val());
+        console.log('send join request');
+        hostName.val('');
         return false;
     })
+
+    // roomIdForm.submit(function(){
+    //     //send this to the server
+    //     room = roomIdInput.val();
+    //     socket.emit('joinRoom',room);
+    //     board.setOrientation('black');
+    //     showRoomId.text("Room ID : " + room);
+    //     roomIdInput.val('');
+    //     return false;
+    // })
 
     //Send message to server
     chatBox.submit(function(){
@@ -47,13 +66,46 @@ function SocketClient(){
         return false;
     })
 
+    socket.on("joinRequestFrom",function(socketId){
+        console.log("join request from " + socketId);
+        var confirm = window.confirm("Join Request, Do you accept?");
+        if(board.isCompetingCpu() && confirm){
+            socket.emit("joinRequestAnswer","yes",socketId);
+            board.setOrientation('white');
+            board.competingHuman();
+        } else {
+            socket.emit("joinRequestAnswer","no",socketId);
+        }
+    })
     socket.on("newGame",function(){
         board.reset();
     })
     socket.on('roomId',function(roomId){
         room = roomId;
-        showRoomId.text('Room ID : ' + room);
+        //showRoomId.text('Room ID : ' + room);
     })
+    // socket.on("getName",function(){
+    //     var name = null;
+    //     name =window.prompt("Enter you name : " , "Immortal Joe");
+    //     if(name!=null){
+    //         socket.emit("sendName",name);
+    //     }
+    // })
+    socket.on("joinRoom",function(newRoom,host){
+        window.alert("Joined room " + host);
+        room = newRoom;
+        console.log(room);
+        socket.emit("joinRoom",room);
+        board.setOrientation('black');
+        board.competingHuman();
+        board.reset();
+    });
+    socket.on("nameError",function(message){
+        window.alert(message);
+        name.text("Unknown");
+        nameForm.show();
+    })
+
     socket.on('greetings',function(msg){
         console.log(msg);
     });
@@ -82,6 +134,7 @@ function SocketClient(){
             board= newBoard;
         },
         sendMove:function(playerColor,source,target,promo){
+            console.log("sent move to " + room);
             socket.emit("move",room,{color:playerColor, from:source,to:target,promotion:promo||''});
         }
     }

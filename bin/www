@@ -22,6 +22,7 @@ app.set('port', port);
 var server = http.createServer(app);
 var io = require("socket.io").listen(server);
 
+var users = []
 function generateRoomId() {
   var result = "";
   var length = 16; 
@@ -37,10 +38,55 @@ function generateRoomId() {
 io.on('connection',function(socket){
 
   io.emit("greetings","welcome to chess online");
+  //io.to(socket.id).emit("getName");
+  socket.on('sendName',function(name){
+    var isNameValid = true;
+    for(var i=0;i<users.length;i++){
+      if(users[i].name===name){
+        isNameValid = false;
+        socket.emit('nameError','Name is already existed, Try again');
+        return;
+      }
+    }
+    if(isNameValid){
+      var room = generateRoomId();
+      users.push({id:socket.id, name:name, room:room});
+      socket.join(room);
+      socket.emit("roomId",room);
+    } 
+  })
+
+  socket.on("joinRequestTo",function(name){
+    console.log('sendRequest to ' + name);
+    for(var i=0;i<users.length;i++){
+      if(users[i].name===name){
+        socket.broadcast.to(users[i].room).emit("joinRequestFrom",socket.id);
+        break;
+      }
+    }
+  })
+
+  socket.on('joinRequestAnswer',function(answer, socketId){
+    var user = users.filter(user=>user.id == socket.id)[0];
+
+    if(answer=="yes"){
+      socket.to(socketId).emit("joinRoom",user.room, user.name);
+    }
+  })
+
+  socket.on("joinRoom",function(room){
+    console.log("joined room" + room);
+    console.log()
+    socket.join(room);
+    users.filter(user=>user.id == socket.id)[0].room = room;
+  })
+
+
   //assign room ID to client
-  var room = generateRoomId();
-  socket.join(room); //initialy give the player a random room id
-  socket.emit('roomId',room);
+  //var room = generateRoomId();
+  //socket.join(room); //initialy give the player a random room id
+  
+  //socket.emit('roomId',room);
 
   //recieve send message request from client with room and message
   socket.on('sendMessage',broadcastMessageToRoom);

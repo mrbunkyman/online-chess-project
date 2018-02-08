@@ -5,7 +5,7 @@ function Board(){
     var chessEngine;
     var color;
 
-    var isCompetingCpu = false; // true until a player connects;
+    var isStockfishOn = true; // true until a player connects;
     var onDragStart = function(source, piece, position, orientation) {
         if (chess.game_over() === true || ( chess.turn()!=color)||
             (chess.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -27,7 +27,7 @@ function Board(){
         if (move === null) return 'snapback';
         updateStatus();
         //player just end turn, CPU starts searching after a second
-        if(isCompetingCpu)
+        if(isStockfishOn)
             window.setTimeout(chessEngine.prepareAiMove(),500);
         else { 
             socket.sendMove(turn, move.from, move.to);
@@ -63,6 +63,9 @@ function Board(){
     var board = new ChessBoard('board', cfg);
 
     return {
+        competingHuman:function(color){
+            isStockfishOn=false;
+        },
         setSocket:function(newSocket){
             socket = newSocket;
         }, setChessEngine:function(engine){
@@ -81,6 +84,8 @@ function Board(){
             return chess.fen();
         }, getTurn:function(){
             return chess.turn();
+        }, isCompetingCpu:function(){
+            return isStockfishOn;
         }, isGameOver:function(){
             return chess.game_over();
         }, makeMove:function(source, target, promo ){

@@ -40,7 +40,7 @@ app.use(session({
   }));
 
 app.get('/', (req,res)=>{
-  res.redirect("/login");
+  res.redirect("/main");
 });
 app.use('/main',main);
 app.use('/login',login);
