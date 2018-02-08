@@ -68,11 +68,14 @@ function SocketClient(){
 
     socket.on("joinRequestFrom",function(socketId){
         console.log("join request from " + socketId);
-        var confirm = window.confirm("Join Request, Do you accept?");
-        if(board.isCompetingCpu() && confirm){
-            socket.emit("joinRequestAnswer","yes",socketId);
-            board.setOrientation('white');
-            board.competingHuman();
+        if(board.isCompetingCpu()){
+            var confirm = window.confirm("Join Request, Do you accept?");
+            if(confirm){
+                socket.emit("joinRequestAnswer","yes",socketId);
+                board.setOrientation('white');
+                board.competingHuman();
+            }
+            
         } else {
             socket.emit("joinRequestAnswer","no",socketId);
         }
@@ -94,7 +97,6 @@ function SocketClient(){
     socket.on("joinRoom",function(newRoom,host){
         window.alert("Joined room " + host);
         room = newRoom;
-        console.log(room);
         socket.emit("joinRoom",room);
         board.setOrientation('black');
         board.competingHuman();
@@ -111,7 +113,6 @@ function SocketClient(){
     });
 
     socket.on('move',function(moveData){
-        console.log(moveData);
         var from,to,promo;
         from = moveData.from;
         to = moveData.to;
@@ -134,7 +135,6 @@ function SocketClient(){
             board= newBoard;
         },
         sendMove:function(playerColor,source,target,promo){
-            console.log("sent move to " + room);
             socket.emit("move",room,{color:playerColor, from:source,to:target,promotion:promo||''});
         }
     }
