@@ -63,10 +63,12 @@ function Board(){
     var board = new ChessBoard('board', cfg);
 
     return {
-        competingHuman:function(color){
+        competingHuman:function(){
             isStockfishOn=false;
         },
-        setSocket:function(newSocket){
+        competingCpu:function(){
+            isStockfishOn=true;
+        }, setSocket:function(newSocket){
             socket = newSocket;
         }, setChessEngine:function(engine){
             chessEngine = engine;

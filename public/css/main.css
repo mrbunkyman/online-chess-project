@@ -16,10 +16,33 @@
     height:400px;
 }
 
-.thinking-icon{
+.chat-box-container{
     height:50px;
 }
 
 .messages-window{
     list-style:none;
+    overflow: auto; 
+    width:100%;
+}
+
+.messages-window li{ 
+    width: 80%;
+}
+.message{
+    padding:10px 15px;
+    border-radius: 20px;
+}
+.sender-message{
+    background-color:#EFA00B;
+    color:black;
+    text-align:left;
+}
+
+.recipient-message{
+    background-color:#0076FF;
+    color:white;
+    text-align:right;
+    left:50px;
+    position: relative;
 }

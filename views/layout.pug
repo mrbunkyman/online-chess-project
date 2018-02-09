@@ -23,13 +23,7 @@ html
     div(class='fluid-container')
       div(class='row')
         div(class='col-sm-2')
-          ul(class='sidebar-nav')
-            li(id="login" class="nav-button")
-              //a(href='/login') Login
-              p Login
-            li(id="main" class="nav-button")
-              //a(href='/home') Home
-              p Play
+          block menu
         div(class='col-sm-6' style="text-align:center;")
           block content
         div(class='col-sm-4')

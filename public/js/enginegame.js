@@ -47,7 +47,7 @@ function EngineGame(options){
     //it has completed search within specific depth
 
     function prepareMove(){
-        $('.logger').text(board.getPgn()+'\n');
+        $('.logge').text(board.getPgn()+'\n');
        
         console.log("CPU is thinking ... ");
         //update the latest board positions before search for moves

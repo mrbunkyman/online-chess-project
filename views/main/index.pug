@@ -16,39 +16,43 @@ block includelib
 
 block includestyle
     include ./style.pug
+block menu
+    div(class='container-fluid')
+        h2(style="text-align:center;") menu
 
-block content
-    div(class="fluid-container")
         div(class="row")
-            p(id="name" style="margin-bottom:20px;")
-        
-        div(class="row")
-            button(id="newGameButton" class="btn btn-primary") New Game
-        
+                button(id="newGameButton" class="btn btn-primary") New Game
         div(class='row' style="margin-top:20px; margin-bottom:20px;")
-            form(id="nameForm" method="" )
-                input(id="nameInput" class="chat-box" type="text")
-                span
-                    button(class="btn btn-primary" type='submit') Enter Name
+                form(id="nameForm" method="" )
+                    label Enter Your Name
+                    input(id="nameInput" class="chat-box" type="text")
+                    span
+                        button(class="btn btn-primary" type='submit') Enter Name
         div(class='row')
             form(id="joinGame" method="" )
+                label Enter Host Name
                 input(id="hostName" class="chat-box" type="text")
                 span
                     button(class="btn btn-primary" type='submit') Join Host
+
+block content
+    div(class="container-fluid")
+        div(class="row")
+            h3(id="name" style="margin-bottom:20px; text-align:center;width:100%;")
 
         div(class="row")
             div(id="board" style="width:450px;padding-top:50px; margin:auto;")
         
 block info
-    div(class="fluid-container")
+    div(class="container-fluid")
         div(class="row window info")
             // Info data
             p(id="headline") You're competing the Computer 
             
         div(class="row window moves-history")
-            ul(id='messages' class='messages-window')
-                
-        div(class="row window thinking-icon")
+            ul(id='messages' class='messages-window' data-spy='scroll')
+                    
+        div(class="row window chat-box-container")
             form(id="chatBox" method="" )
                 input(id="chat" class="chat-box" type="text")
                 span

@@ -27,10 +27,15 @@ function SocketClient(){
     //     headline.text("Competing SomeGuy");
     // }
 
+    // newGameButton.click(function(){
+    //     console.log("clicked");
+    //     socket.emit("newGame",room);
+    //     //board.reset();
+    // })
     newGameButton.click(function(){
         console.log("clicked");
-        socket.emit("newGame",room);
-        board.reset();
+        socket.emit("newGameRequest",room);
+        //board.reset();
     })
     //Enter room with Id
     nameForm.submit(function(){
@@ -41,27 +46,26 @@ function SocketClient(){
          return false;
     })
     joinGame.submit(function(){
-        socket.emit("joinRequestTo",hostName.val());
-        console.log('send join request');
+        if(room)
+            socket.emit("joinRequestTo",hostName.val());
+        else{
+            alert("You did not have a name");
+        }
+            //console.log('send join request');
         hostName.val('');
         return false;
     })
-
-    // roomIdForm.submit(function(){
-    //     //send this to the server
-    //     room = roomIdInput.val();
-    //     socket.emit('joinRoom',room);
-    //     board.setOrientation('black');
-    //     showRoomId.text("Room ID : " + room);
-    //     roomIdInput.val('');
-    //     return false;
-    // })
 
     //Send message to server
     chatBox.submit(function(){
         //send this to the server
         //socket.emit("sendMessage",room,chat.val());
         socket.emit("sendMessage",room,chat.val());
+        var li = $('<li/>').append($('<p/>',{
+            text:chat.val(),
+            class:"message recipient-message"
+        }))
+        messages.append(li);
         chat.val('');
         return false;
     })
@@ -80,20 +84,24 @@ function SocketClient(){
             socket.emit("joinRequestAnswer","no",socketId);
         }
     })
+
+    socket.on("newGameRequest",function(){
+        var confirm = window.confirm("Opponent want to reset the game");
+        if(confirm){
+            socket.emit("newGame",room);
+        }
+    })
+
     socket.on("newGame",function(){
         board.reset();
     })
+
     socket.on('roomId',function(roomId){
         room = roomId;
         //showRoomId.text('Room ID : ' + room);
     })
-    // socket.on("getName",function(){
-    //     var name = null;
-    //     name =window.prompt("Enter you name : " , "Immortal Joe");
-    //     if(name!=null){
-    //         socket.emit("sendName",name);
-    //     }
-    // })
+
+
     socket.on("joinRoom",function(newRoom,host){
         window.alert("Joined room " + host);
         room = newRoom;
@@ -125,9 +133,16 @@ function SocketClient(){
     socket.on('sendMessage',function(message){
         var li = $('<li/>').append($('<p/>',{
             text:message,
-            class:"sender"
+            class:"message sender-message"
         }))
         messages.append(li);
+    })
+
+    socket.on('opponentDisconnect',function(){
+        alert("Opponent left the room");
+        board.setOrientation('white');
+        board.competingCpu();
+        board.reset();
     })
 
     return {

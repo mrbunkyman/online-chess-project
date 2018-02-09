@@ -39,7 +39,64 @@ io.on('connection',function(socket){
 
   io.emit("greetings","welcome to chess online");
   //io.to(socket.id).emit("getName");
-  socket.on('sendName',function(name){
+  socket.on('sendName',sendName)
+
+  socket.on("joinRequestTo",joinRequestTo)
+
+  socket.on('joinRequestAnswer',joinRequestAnswer)
+
+ socket.on("joinRoom",joinRoom)
+
+  socket.on('sendMessage',broadcastMessageToRoom);
+
+  //recieve request to join room with code
+  //socket.on('joinRoom',joinRoomRequest);
+
+  socket.on('move', broadcastMove);
+
+  socket.on('newGameRequest',newGameRequest);
+  socket.on('newGame',newGame);
+
+  socket.on('disconnect',disconnect)
+
+  function broadcastMessageToRoom(room, message){
+    socket.broadcast.to(room).emit("sendMessage",message);
+  }
+  // function joinRoomRequest(room){
+  //   socket.join(room);
+  //   socket.broadcast.to(room).emit("sendMessage","SERVER : a user just joined");
+  // }
+  function broadcastMove(room, moveData){
+    socket.broadcast.to(room).emit("move",moveData);
+  }
+  function newGame(room){
+    io.to(room).emit("newGame");
+  }
+
+  function newGameRequest(room){
+    if(room)
+      socket.broadcast.to(room).emit("newGameRequest");
+  }
+
+  function joinRequestTo(name){
+    console.log('sendRequest to ' + name);
+    for(var i=0;i<users.length;i++){
+      if(users[i].name===name){
+        socket.broadcast.to(users[i].room).emit("joinRequestFrom",socket.id);
+        break;
+      }
+    }
+  }
+
+  function joinRoom(room){
+    console.log("joined room" + room);
+    socket.broadcast.to(room).emit("sendMessage","SERVER : a user just joined");
+    if(room){
+      socket.join(room);
+      users.filter(user=>user.id == socket.id)[0].room = room;
+    }
+  }
+  function sendName(name){
     var isNameValid = true;
     for(var i=0;i<users.length;i++){
       if(users[i].name===name){
@@ -54,62 +111,25 @@ io.on('connection',function(socket){
       socket.join(room);
       socket.emit("roomId",room);
     } 
-  })
+  }
 
-  socket.on("joinRequestTo",function(name){
-    console.log('sendRequest to ' + name);
-    for(var i=0;i<users.length;i++){
-      if(users[i].name===name){
-        socket.broadcast.to(users[i].room).emit("joinRequestFrom",socket.id);
-        break;
-      }
-    }
-  })
-
-  socket.on('joinRequestAnswer',function(answer, socketId){
+  function joinRequestAnswer(answer,socketId){
     var user = users.filter(user=>user.id == socket.id)[0];
 
     if(answer=="yes"){
       socket.to(socketId).emit("joinRoom",user.room, user.name);
     }
-  })
-
-  socket.on("joinRoom",function(room){
-    console.log("joined room" + room);
-    console.log()
-    socket.join(room);
-    users.filter(user=>user.id == socket.id)[0].room = room;
-  })
-
-
-  //assign room ID to client
-  //var room = generateRoomId();
-  //socket.join(room); //initialy give the player a random room id
-  
-  //socket.emit('roomId',room);
-
-  //recieve send message request from client with room and message
-  socket.on('sendMessage',broadcastMessageToRoom);
-
-  //recieve request to join room with code
-  socket.on('joinRoom',joinRoomRequest);
-
-  socket.on('move', broadcastMove);
-
-  socket.on('newGame',newGame);
-
-  function broadcastMessageToRoom(room, message){
-    socket.broadcast.to(room).emit("sendMessage",message);
   }
-  function joinRoomRequest(room){
-    socket.join(room);
-    socket.broadcast.to(room).emit("sendMessage","SERVER : a user just joined");
-  }
-  function broadcastMove(room, moveData){
-    socket.broadcast.to(room).emit("move",moveData);
-  }
-  function newGame(room){
-    socket.broadcast.to(room).emit("newGame");
+  function disconnect(){
+    for(var i =0;i<users.length;i++){
+      if(users[i].id == socket.id){
+        socket.broadcast.to(users[i].room).emit("opponentDisconnect");
+        users.splice(i,1);
+        break;
+      }
+    }
+    
+    console.log(users);
   }
 
 })
