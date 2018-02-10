@@ -78,6 +78,7 @@ function SocketClient(){
                 socket.emit("joinRequestAnswer","yes",socketId);
                 board.setOrientation('white');
                 board.competingHuman();
+                board.reset();
             }
             
         } else {

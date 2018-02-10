@@ -18,7 +18,7 @@ block includestyle
     include ./style.pug
 block menu
     div(class='container-fluid')
-        h2(style="text-align:center;") menu
+        h2(style="text-align:center;") Chess.io
 
         div(class="row")
                 button(id="newGameButton" class="btn btn-primary") New Game
@@ -47,7 +47,7 @@ block info
     div(class="container-fluid")
         div(class="row window info")
             // Info data
-            p(id="headline") You're competing the Computer 
+            h3(id="headline" style='text-align:center; width:100%;') Messages
             
         div(class="row window moves-history")
             ul(id='messages' class='messages-window' data-spy='scroll')
