@@ -21,17 +21,6 @@ function SocketClient(){
 
     var board; // server sends opponent move to board
 
-    // if(isCompetingCpu){
-    //     headline.text("Competing Computer");
-    // } else {
-    //     headline.text("Competing SomeGuy");
-    // }
-
-    // newGameButton.click(function(){
-    //     console.log("clicked");
-    //     socket.emit("newGame",room);
-    //     //board.reset();
-    // })
     newGameButton.click(function(){
         console.log("clicked");
         socket.emit("newGameRequest",room);

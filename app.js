@@ -6,20 +6,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require("express-session");
-var mongoose = require("mongoose");
 
-var index = require('./routes/index');
 var main = require("./routes/main");
-var login = require("./routes/login");
 var app = express();
-
-//database setup
-var db_url = "mongodb://nguyen:nguyen@ds263707.mlab.com:63707/online-chess";
-var mongoDB = db_url;
-mongoose.connect(mongoDB);
-mongoose.Promise = global.Promise;
-var db = mongoose.connection;
-db.on('error',console.error.bind(console,'Database connection error'));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,18 +22,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-    secret:"i love cookies",
-    resave:true,
-    saveUninitialized:true
-  }));
-
 
 app.use('/main',main);
 app.get('/*', (req,res)=>{
   res.redirect("/main");
 });
-// app.use('/login',login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
