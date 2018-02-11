@@ -6,10 +6,23 @@ function Board(){
     var color;
 
     var isStockfishOn = true; // true until a player connects;
+    
     var onDragStart = function(source, piece, position, orientation) {
         if (chess.game_over() === true || ( chess.turn()!=color)||
             (chess.turn() === 'w' && piece.search(/^b/) !== -1) ||
             (chess.turn() === 'b' && piece.search(/^w/) !== -1)) {
+                if(isStockfishOn){
+                    if(chess.turn()=='w'){
+                        alert("You lost");
+                    } else if(chess.turn()=='b'){
+                        alert("You beated Mr.Stockfish, Congrats");
+                    }
+                    chess.reset();
+                    board.start();
+                } else {
+                    alert("You lost");
+                    socket.requestNewGame();
+                }
                 return false;
         } 
       };

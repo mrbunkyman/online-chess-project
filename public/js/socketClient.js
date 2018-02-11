@@ -22,7 +22,6 @@ function SocketClient(){
     var board; // server sends opponent move to board
 
     newGameButton.click(function(){
-        console.log("clicked");
         socket.emit("newGameRequest",room);
         //board.reset();
     })
@@ -141,6 +140,8 @@ function SocketClient(){
         },
         sendMove:function(playerColor,source,target,promo){
             socket.emit("move",room,{color:playerColor, from:source,to:target,promotion:promo||''});
+        },requestNewGame:function(){
+            socket.emit("newGameRequest",room);
         }
     }
 }
