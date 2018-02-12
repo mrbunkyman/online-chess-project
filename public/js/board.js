@@ -8,23 +8,22 @@ function Board(){
     var isStockfishOn = true; // true until a player connects;
     
     var onDragStart = function(source, piece, position, orientation) {
-        if (chess.game_over() === true || ( chess.turn()!=color)||
-            (chess.turn() === 'w' && piece.search(/^b/) !== -1) ||
-            (chess.turn() === 'b' && piece.search(/^w/) !== -1)) {
+        if(chess.in_checkmate()){
+            var confirm = window.confirm("You Lost! Reset the game?");
+            if(confirm){
                 if(isStockfishOn){
-                    if(chess.turn()=='w'){
-                        alert("You lost");
-                    } else if(chess.turn()=='b'){
-                        alert("You beated Mr.Stockfish, Congrats");
-                    }
                     chess.reset();
                     board.start();
                 } else {
-                    alert("You lost");
                     socket.requestNewGame();
                 }
-                return false;
-        } 
+            }
+        }
+        if(chess.turn()!=color || chess.game_over() ||
+        (chess.turn() === 'w' && piece.search(/^b/) !== -1) || // whites are not allowed to touch black and vice versa
+        (chess.turn() === 'b' && piece.search(/^w/) !== -1)){
+            return false;
+        }
       };
 
       var onDrop = function(source, target) {
@@ -54,8 +53,12 @@ function Board(){
             moveColor = "Black";
         }
         if(chess.in_checkmate()==true){
-            status=  "Game Over, " + moveColor + " is in check mate";
+            status=  "You won, " + moveColor + " is in checkmate";
             window.alert(status);
+            if(isStockfishOn){
+                chess.reset();
+                board.start();
+            }
             return; 
         } else if(chess.in_draw()){
             status = "Game Over, Drawn";

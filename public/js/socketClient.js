@@ -33,6 +33,7 @@ function SocketClient(){
          nameForm.hide();
          return false;
     })
+
     joinGame.submit(function(){
         if(room)
             socket.emit("joinRequestTo",hostName.val());
@@ -75,7 +76,7 @@ function SocketClient(){
     })
 
     socket.on("newGameRequest",function(){
-        var confirm = window.confirm("Opponent want to reset the game");
+        var confirm = window.confirm("You won! Opponent want to reset the game");
         if(confirm){
             socket.emit("newGame",room);
         }
@@ -141,6 +142,7 @@ function SocketClient(){
         sendMove:function(playerColor,source,target,promo){
             socket.emit("move",room,{color:playerColor, from:source,to:target,promotion:promo||''});
         },requestNewGame:function(){
+
             socket.emit("newGameRequest",room);
         }
     }

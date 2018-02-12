@@ -76,7 +76,7 @@ function EngineGame(options){
                     //window.alert("You're being Checked");
 
                 } else if(match[4]=="#"){ // player lose,  game over
-                    //window.alert("Game Over! You lose ");
+//                    window.alert("Game Over! You lose :)");
                 }
                 board.makeMove(match[1],match[2],match[3]);
 
