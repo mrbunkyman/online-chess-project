@@ -1,10 +1,11 @@
+
 function SocketClient(){
-        var socket = io.connect('http://localhost:3000');    var engineGame;
+    var socket = io.connect();   
+    var engineGame;
     var headline = $('#headline');
     var messages = $('#messages');
     var chatBox = $("#chatBox");
     var chat = $('#chat');
-//  var isCompetingCpu;
     var roomIdForm = $('#roomIdForm');
     var roomIdInput = $('#roomIdInput');
     var newGameButton = $("#newGameButton");
