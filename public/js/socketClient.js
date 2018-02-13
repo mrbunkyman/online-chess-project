@@ -23,7 +23,12 @@ function SocketClient(){
     var board; // server sends opponent move to board
 
     newGameButton.click(function(){
-        socket.emit("newGameRequest",room);
+        if(board.isCompetingCpu()){
+            board.reset();
+        } else {
+            socket.emit("newGameRequest",room);
+        }
+
         //board.reset();
     })
     //Enter room with Id
