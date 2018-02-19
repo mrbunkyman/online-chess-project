@@ -1,2 +1,1 @@
-Chess Project Tutorial
-Run app at :https://chessio.herokuapp.com/
+Online Real-time chess at :https://chessio.herokuapp.com/
